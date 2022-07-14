@@ -26,6 +26,7 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        //RenderSettings.ambientIntensity = 0f;
         charcon = GetComponent<CharacterController>();
 
         playerInput = new PlayerInput();
@@ -52,8 +53,15 @@ public class PlayerManager : MonoBehaviour
         inputVector = playerInput.Player.Movement.ReadValue<Vector2>();
 
         Vector3 move = transform.right * inputVector.x + transform.forward * inputVector.y;
-        
-        charcon.Move((move  * speed * Time.deltaTime) + velocity * Time.deltaTime);
+
+        if (playerInput.Player.Sprint.IsPressed())
+        {
+            charcon.Move((move * speed * 1.5f * Time.deltaTime) + velocity * Time.deltaTime);
+        }
+        else
+        {
+            charcon.Move((move * speed * Time.deltaTime) + velocity * Time.deltaTime);
+        }
         //Debug.Log(charcon.velocity);
     }
 

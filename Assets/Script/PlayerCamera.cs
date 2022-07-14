@@ -14,6 +14,7 @@ public class PlayerCamera : MonoBehaviour
     private PlayerInput playerInput;
     private float inputVectorY;
     private float inputVectorX;
+    private float baseFov;
 
     public float weaponRange = 50f;
 
@@ -23,6 +24,7 @@ public class PlayerCamera : MonoBehaviour
     void Awake()
     {
         fpsCam = GetComponentInParent<Camera>();
+        baseFov = fpsCam.fieldOfView;
         Cursor.lockState = CursorLockMode.Locked;
         playerInput = new PlayerInput();
         playerInput.Player.Enable();
@@ -35,6 +37,14 @@ public class PlayerCamera : MonoBehaviour
 
         // Draw a line in the Scene View  from the point lineOrigin in the direction of fpsCam.transform.forward * weaponRange, using the color green
         Debug.DrawRay(lineOrigin, fpsCam.transform.forward * weaponRange, Color.green);
+        if(playerInput.Player.Sprint.IsPressed())
+        {
+            fpsCam.fieldOfView = Mathf.Lerp(fpsCam.fieldOfView, baseFov * 1.25f, Time.deltaTime * 8f);
+        } 
+        else
+        {
+            fpsCam.fieldOfView = Mathf.Lerp(fpsCam.fieldOfView, baseFov, Time.deltaTime * 8f);
+        }
     }
 
     void LateUpdate()
